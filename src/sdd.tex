@@ -96,7 +96,7 @@ Section 3 covers the system architecture including the architectural design, dec
 Section 4 details the data design giving a description and data dictionary. \\
 Section 5 is the component design, offering a comprehensive look at each component and how they link with one another. \\
 Section 6 includes the human interface design. \\
-Section 7 Appendicies \\
+Section 7 lists the Appendicies. \\
 
   \subsection{Definitions, Acronyms, and Abbreviations}
 	\begin{tabularx}{\textwidth}{|l|l} \hline
@@ -121,12 +121,14 @@ Give a general description of the functionality, context and design of your proj
   \subsection{Decomposition Description}
   \subsection{Design Rationale}
 
+\newpage
+
 \section{Human Interface Design}
 
 \subsection{Overview of User Interface}
 The interface for the Flight Planning Editor will be a windows desktop application with a design concept shown in the illustration below. 
 	\subsection{Screen Image}
-\includegraphics{FlightPlanning_Interface}
+\includegraphics[width=\linewidth]{FlightPlanning_Interface}
 	\subsection{Screen Objects and Actions}
 In the above window there are effectively four subsections to the interface. In the upper left corner, where it reads 'Lat', this portion of the interface is where the user can input both the lattitude and longitude coordinates as input into the flight editor. To add these coordinates to the current flight plan, simply click on the 'Add Waypoint' box and the program will create a new point on the map as well as create an addition into the Order of Points Visited section detailed below. \\
 Directly below, there will be another section which reads the various flight plans that are currently loaded and their respective names (i.e. Flight Plan A). To distinguish which flight plan the user wants to current edit, that flight plan will have a box which shows an 'X' or is checked to denote that it is currently selected. \\
