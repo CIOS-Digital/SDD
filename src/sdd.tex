@@ -7,15 +7,42 @@
 \rhead{Page \thepage}
 \lhead{Software Design Specification for Flight Plan Editor}
 
-\title{Software Design Document \\
-Flight Planning
+\makeatletter
+\renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
+\thispagestyle{empty}
+\null
+  \begin{flushleft}
+  \vspace{15mm}
+  \vskip2mm
+  \Huge{\textbf{\@title}}
+  \vspace{8cm}
+
+  \textbf{Group: CIOS Digital}
+  \@author
+  \end{flushleft}\egroup
 }
-\author{ Cedrick Cooke
-    \and Ian Littke
-    \and Owen Roth-Lerner
-    \and Sander Scherman Garzon
+\makeatother
+
+\title{Software Design Specification\\for\\Flight Plan Editor}
+\date{}
+\author{
+\\Cedrick Cooke\\
+Ian Littke\\
+Owen Roth-Lerner\\
+Sander Scherman Garzon
 }
-\date{Version 0.1 \\ 2017-04-13}
+
+
+
+% \title{Software Design Document \\
+% Flight Planning
+% }
+% \author{Cedrick Cooke
+%     \and Ian Littke
+%     \and Owen Roth-Lerner
+%     \and Sander Scherman Garzon
+% }
+% \date{Version 0.1 \\ 2017-04-13}
 
 \begin{document}
 \maketitle
@@ -46,6 +73,7 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
 \end{tabularx}
 \newpage
 \tableofcontents
+
 \newpage
 
 
