@@ -31,7 +31,7 @@ CSCI 492: Spring 2017\\
 \title{Software Design Specification\\for\\Flight Plan Editor}
 \date{}
 \author{
-\\Cedrick Cooke\\
+Cedrick Cooke\\
 Ian Littke\\
 Owen Roth-Lerner\\
 Sander Scherman Garzon
@@ -51,6 +51,7 @@ Sander Scherman Garzon
 
 \begin{document}
 \maketitle
+
 \newpage
 \section*{Revision History}
 \begin{tabularx}{\textwidth}{|l|r|X|l|}
@@ -118,7 +119,7 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
     The CAP will need to create flight plans based on existing structures so the application will focus around a map.
     The user will then be able to either click on map to insert a new waypoint in the flight plan or manually input in a latitude/longitude coordinate system.
     Both are included to allow precise input of key waypoints (such as an overpass) or coarse input for secondary waypoints (such as an entry/depature course).
-    The User Interface is furter explained in Section \ref{ui}.
+    The User Interface is furter explained in Section \ref{sec:ui}.
 
     %  \subsection{System context Diagram}
 
@@ -150,7 +151,7 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
 %   \subsection{Design Rationale}
 \newpage
 
-\section{Human Interface Design}\label{ui}
+\section{Human Interface Design} \label{sec:ui}
 
 \subsection{Overview of User Interface}
 The interface for the Flight Planning Editor will be a Windows desktop application with a design concept shown in the illustration below.
@@ -164,6 +165,16 @@ Directly below, there will be another section which reads the various flight pla
 Underneath the above section, in the lower left corner of the application, there is a section for the order of points visited. In this section there will be a list of all the currently added waypoints named 'W1', 'W2'... Each of these waypoints are listed in order from top to the bottom. To the right of these names there are arrows pointing upwards and downwards, and by clicking on this icon up or down, the user will be able to re-arrange the order in which each point is visited and the application will swap the waypoint boxes in this section, as well as redraw the arrow on the map to reflect the changes made. In the upper left portion of each boxes for the waypoints will be a small box with an 'X' when clicked will delete the waypoint and remove it from the map.\\
 The largest portion of the interface will display the map. This section will display the current area that the user has selected by panning and zooming in or out of the map. Inside there will be each of the waypoints listed and arrows denoting the direction of the flight plan. As the user enters a new lattitude and longitude, these waypoints will be refreshed and shown ontop of the map in their respective locations. \\
 Also included, however not displayed in the diagram are the file and help pull down menus. Within the file menu, there will be the option to start a new or open an existing flight plan. The ability to save the flight plan, or to export onto the SD card. As well as being able to exit the application. Under the help menu, there will be a tutorial to showcase the basic functionality and an included about page with the company information and the version number of the application.
+
+\appendix
+\section{Remove Me!}
+\begin{figure}[!ht]
+    \centering
+    \includegraphics{example-diagram}
+\end{figure}
+This is an example of adding a diagram with plantuml.
+Make sure you have an appropriately named UML file in the plantuml folder,
+and just use includegraphics.
 
 
 % \bibliography{citations}{}
