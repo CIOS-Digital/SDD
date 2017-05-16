@@ -1,0 +1,31 @@
+@startuml
+!include coordinate.uml
+!include flightplan.uml
+!include mapcontrol.uml
+!include mapdb.uml
+
+package Application {
+    ~class MainPage {
+        -FlightPlan ActivePlan
+        -WorldMap Map
+        -PlanChooser PlanChooser
+        -FlightTable Table
+    }
+
+    MainPage o-- FlightPlan
+    MainPage *-- FlightTable
+    MainPage *-- PlanChooser
+    MainPage *-- WorldMap
+
+    ~class FlightTable {
+        -FlightPlan ActivePlan
+    }
+    
+    FlightTable o-- FlightPlan
+
+    ~class PlanChooser {
+        -String CurrentDirectory
+    }
+}
+
+@enduml
