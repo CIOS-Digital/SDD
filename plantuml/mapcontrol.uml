@@ -1,0 +1,21 @@
+@startuml
+!include coordinate.uml
+!include flightplan.uml
+!include mapdb.uml
+
+package MapControl {
+    +class WorldMap {
+        -Coordinate DisplayCenter
+        -decimal DisplayZoom
+        -MapType DisplayType
+        -MapProvider ImageSource
+        -FlightPlan ActivePlan
+    }
+
+    WorldMap o-- Coordinate
+    WorldMap o-- MapProvider
+    WorldMap o-- MapType
+    WorldMap o-- FlightPlan
+}
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+start
+:select "remove selected waypoint";
+if (previous waypoint) then (yes)
+  if (following waypoint) then (yes)
+    :Connect previous line\n to following waypoint\n remove lines connection from current;
+  else (no)
+    :remove connecting line\n from previous waypoint;
+    endif
+else (no)
+  if (following waypoint) then (yes)
+    :remove connecting\n line to following waypoint;
+  endif
+endif
+:remove waypoint;
+stop
+@enduml

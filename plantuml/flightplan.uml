@@ -1,0 +1,27 @@
+@startuml
+!include coordinate.uml
+
+package FlightPlan {
+    +class FlightPlan {
+        -List<Coordinate> Waypoints
+        __
+        {static} +FlightPlan Empty()
+        ..
+        {static} +FlightPlan FromXMLString(String)
+        +String ToXMLString()
+        ..
+        +int CountWaypoints()
+        +IEnumerable<Coordinate> GetWaypoints()
+        +void AppendWaypoint(Coordinate)
+        +bool ContainsWaypoint(Coordinate)
+        +bool InsertWaypoint(Coordinate, int index)
+        +bool MoveWaypoint(Coordinate from, Coordinate to)
+        +bool MoveWaypoint(int index, Coordinate to)
+        +bool RemoveWaypoint(Coordinate)
+        +bool RemoveWaypoint(int index)
+    }
+
+    FlightPlan *-- Coordinate
+}
+
+@enduml

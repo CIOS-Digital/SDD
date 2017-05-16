@@ -1,0 +1,47 @@
+@startuml
+!include coordinate.uml
+
+package MapDB {
+    +class Dimension <<(S, #80F080) struct>> {
+        +int Height
+        +int Width
+    }
+
+    +class MapImageSpec <<(S, #80F080) struct>> {
+        +Coordinate Coordinate
+        +MapType MapType
+        +Dimension Size
+        +decimal Zoom
+    }
+
+    MapImageSpec *-- Dimension
+    MapImageSpec *-- Coordinate
+    MapImageSpec *-right- MapType
+
+    +interface MapProvider {
+        +Image GetImage(MapImageSpec)
+    }
+
+    MapProvider <.. MapImageSpec
+
+    +enum MapType {
+        RoadMap
+        Terrain
+        Satellite
+        Hybrid
+    }
+
+    +class SQLiteDBMap {
+        -SQLiteConnection DbConnection
+
+        {static} +SQLiteDBMap OpenDB(String DBPath)
+        -bool CacheImage(MapImageSpec, Image)
+        -Image DownloadImage(MapImageSpec)
+        -Image GetCachedImage(MapImageSpec)
+    }
+
+    SQLiteDBMap <|.. MapProvider
+    SQLiteDBMap <.. MapImageSpec
+}
+
+@enduml

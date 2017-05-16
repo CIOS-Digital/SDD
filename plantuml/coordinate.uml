@@ -1,0 +1,10 @@
+@startuml
+
+package Coordinate {
+    +class Coordinate <<(S, #80F080) struct>> {
+        +decimal Latitude
+        +decimal Longitude
+    }
+}
+
+@enduml

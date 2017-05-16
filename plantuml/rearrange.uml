@@ -1,0 +1,15 @@
+@startuml
+start
+:select "rearragne selected waypoint";
+if (moving up list) then (yes)
+  :move waypoint up list;
+  :reconnect waypoints;
+else (no)
+   :move waypoint down list;
+  :reconnect waypoints;
+endif
+:display order visted;
+:display map\ndirection arrows;
+:remove previously\ndrawn arrows;
+stop
+@enduml

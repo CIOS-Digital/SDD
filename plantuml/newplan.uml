@@ -1,0 +1,10 @@
+@startuml
+start
+:select "New Flight Plan";
+if (current plan saved) then (no)
+  :prompt to save plan;
+endif
+:clear waypoints on map;
+:prompt new plan name;
+stop
+@enduml
