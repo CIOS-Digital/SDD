@@ -1,0 +1,11 @@
+@startuml
+    class Example {
+        -privy: MyClass
+    }
+
+    class Diagram {
+        +publes: MyOtherClass
+    }
+
+    Example *-- Diagram
+@enduml
