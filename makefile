@@ -39,4 +39,4 @@ clean:
 	-rm -f ./out/*.pdf
 	-rm -f ./out/build/*
 
-.PHONY: all diagram prebuild clean
+.PHONY: all diagrams prebuild clean
