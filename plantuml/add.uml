@@ -1,0 +1,15 @@
+@startuml
+start
+:select "add waypoint";
+if (waypoint invalid) then (yes)
+    :alert user to invalid input;
+    stop
+else (no)
+    if (first waypoint) then (yes)
+    else (no)
+        :draw connecting line on map;
+    endif
+    :draw waypoint on map;
+endif
+stop
+@enduml

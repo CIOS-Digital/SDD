@@ -1,0 +1,10 @@
+@startuml
+user -down-> (Show Help)
+user -down-> (Save Current Plan)
+user -down-> (Map Toggle)
+user -down-> (Edit Existing Flight Plan)
+user -down-> (Open New Flight Plan)
+user -up-> (Add New Waypoint)
+user -up-> (Remove Waypoint)
+user -up-> (Rearrange Waypoint)
+@enduml
