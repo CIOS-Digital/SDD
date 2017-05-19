@@ -1,0 +1,10 @@
+@startuml
+start
+:select "Save Current Plan";
+if (current plan saved) then (no)
+  :prompt to save plan;
+endif
+:prompt plan save name;
+:prompt target save location;
+stop
+@enduml

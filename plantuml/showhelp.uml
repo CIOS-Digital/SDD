@@ -1,0 +1,6 @@
+@startuml
+start
+:select "Help";
+:opens new window for tutorial;
+stop
+@enduml
