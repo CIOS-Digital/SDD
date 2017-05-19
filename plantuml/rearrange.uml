@@ -1,6 +1,6 @@
 @startuml
 start
-:select "rearragne selected waypoint";
+:select "rearrange selected waypoint";
 if (moving up list) then (yes)
   :move waypoint up list;
   :reconnect waypoints;

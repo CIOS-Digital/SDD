@@ -1,0 +1,10 @@
+@startuml
+start
+if (road) then (yes)
+elseif (satellite) then (yes)
+elseif (terrain) then (yes)
+elseif (hybrid) then (yes)
+endif
+:map view refreshed;
+stop
+@enduml
