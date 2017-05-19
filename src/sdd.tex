@@ -106,56 +106,79 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
       \item CIOS Digital Software Requirements Specification (SRS)
     \end{itemize}
 
-  \subsection{Definitions, Acronyms, and Abbreviations}
-  	\begin{tabularx}{\textwidth}{|l|R|} \hline
-    	Acronym & Definition \\ \hline
-    	CAP & Civilian Air Patrol  \\ \hline
-    	SD & Secure Digital (Memory card) \\ \hline
-  	\end{tabularx}
-
-  \section{System Overview}\label{system}
-    The CAP will need to create flight plans based on existing structures so the application will focus around a map.
-    The user will then be able to either click on map to insert a new waypoint in the flight plan or manually input in a latitude/longitude coordinate system.
-    Both are included to allow precise input of key waypoints (such as an overpass) or coarse input for secondary waypoints (such as an entry/depature course).
-    The User Interface is furter explained in Section \ref{sec:ui}.
-
-    \begin{enumerate}
-      \item UC:Show Help
-	\quickfigure{0.35}{showhelp}{Show Help Use Case}
-	If a user is experiencing any difficulty with regards to using the application, there will be an included help page to assist with basic knowledge and instructions on how to use the program. The 		user must click the 'help' tab located at the top of the program which will open a new window offering descriptions and a quick tutorial on how to use the application.
-
-      \item UC:Create New Plan
-	\quickfigure{0.35}{newplan}{Create New Flight Plan Use Case}
-	In order to create a new flight plan, the user must click on 'New Flight Plan.' Doing so will first initiate a check whether or not a current plan is in use, and if so, check to see whether or not 		this current plan is saved before moving on. Following this initial step, the program will proceed by clearing all waypoints currently drawn on the map. Next, the program will prompt the user to 		enter a new name for the flight plan, so long as this name is valid, the new flight plan will have been created with that given name and is now ready for new waypoints to be added. If the name is 		invalid, either wait for the user to enter in a valid name, or allow the user to cancel the operation.
-
-      \item UC:Save Plan
-	\quickfigure{0.35}{saveplan}{Save Flight Plan Use Case}
-	When a user wants to save the current flight plan, they will select the 'save' button and be given the option to save under a new name, or continuing with the existing save name should one exist. 		Once a valid name is entered, the program will generate the current flight plan and format it to the same XML standard which will be saved onto the SD card, except at a given target on the 		computer desktop. 
-
-      \item UC:Edit Plan
-	\quickfigure{0.35}{editplan}{Edit Flight Plan Use Case}
-	In order to edit a previously saved flight plan, the program must first make sure that the user does not currently have a flight plan open that has not been saved. If there is a plan that needs to be saved, the program saves the program to an XML document and then clears the map API and list interface, and loads the other plan’s waypoints from the XML to the list and updates the map.
-
-      \item UC:Add Waypoint
-	\quickfigure{0.75}{add}{Add Waypoint Use Case}
-	To add a waypoint, the user must first enter both a longitude and lattitude coordinate, once completed, click the 'add waypoint' button located on the upper left portion of the application window. 		In doing so, the application will first validate whether or not the input is valid, and if so, the application will call upon it's add waypoint function. While doing this, the application will 		also draw a cooresponding point on the visual map, as well as a arrow connecting the newly added waypoint to the last waypoint currently drawn on the map, this step is ignored if it is the first 		waypoint entered. Should the input be invalid, it would alert the user that an incorrect coordinate was entered and the program does not enter the invalid data into the flight editor.
-
-      \item UC:Remove Waypoint
-	\quickfigure{1}{remove}{Remove Waypoint Use Case}
-	If a user wants to remove a waypoint from the flight plan, they must first click on the 'x' to delete the waypoint. Doing so initiates a series of checks which the program computes automatically, such as seeing whether or not the waypoint is between other waypoints. Depending on the placement of this waypoint in question and if it is preceded or followed by another waypoint, the program will accordingly remove and redraw the connecting arrows connecting the preceding and following waypoints. Once complete, the program will remove the waypoint.
-
-      \item UC:Rearrange Waypoint
-	\quickfigure{0.5}{rearrange}{Rearrange Waypoints Use Case}
-	The user must be able to not only create new waypoints and delete them from a list, but be able to shift existing waypoints around. In order to re-arrange the order of flight waypoints in the flight plan list, the user must select a specific waypoint and then decide whether they want to move it up in order or down in order. Depending on which way the user decides to shift the waypoint, the list will update and display the new order. Afterwhich the program will shift the arrows between waypoints over the google maps API. 
-
-      \item UC:Map Toggle
-	\quickfigure{0.75}{maptoggle}{Map Toggle Use Case}
-	The user may wish to shift which kind of map the flight plan display is using. If the user wishes to changed from the default road map background to a terrain, satellite, or hybrid map, the user will simply select one of the four map “buttons” at which point the google map API will simply change the background that the points are overlaid on. The only checks at this point is the redundancy check of making sure that the user is not selecting the already-selected map. 
-
-    \end{enumerate}
-    %  \subsection{System context Diagram}
+\subsection{Definitions, Acronyms, and Abbreviations}
+\begin{tabularx}{\textwidth}{|l|R|} \hline
+  Acronym & Definition \\ \hline
+  CAP & Civilian Air Patrol  \\ \hline
+  SD & Secure Digital (Memory card) \\ \hline
+\end{tabularx}
 
 \newpage
+\section{System Overview}\label{system}
+The CAP will need to create flight plans based on existing structures so the application will focus around a map.
+The user will then be able to either click on map to insert a new waypoint in the flight plan or manually input in a latitude/longitude coordinate system.
+Both are included to allow precise input of key waypoints (such as an overpass) or coarse input for secondary waypoints (such as an entry/depature course).
+The User Interface is furter explained in Section \ref{sec:ui}.
+
+\subsection{Use Cases}
+\subsubsection{UC:Show Help}
+If a user is experiencing any difficulty with regards to using the application, there will be an included help page to assist with basic knowledge and instructions on how to use the program.
+The user must click the `help' tab located at the top of the program which will open a new window offering descriptions and a quick tutorial on how to use the application.
+\quickfigure{0.35}{showhelp}{Show Help Use Case}
+
+\clearpage
+\subsubsection{UC:Create New Plan}
+In order to create a new flight plan, the user must click on `New Flight Plan.'
+Doing so will first initiate a check whether or not a current plan is in use, and if so, check to see whether or not this current plan is saved before moving on.
+Following this initial step, the program will proceed by clearing all waypoints currently drawn on the map.
+Next, the program will prompt the user to enter a new name for the flight plan, so long as this name is valid, the new flight plan will have been created with that given name and is now ready for new waypoints to be added.
+If the name is invalid, either wait for the user to enter in a valid name, or allow the user to cancel the operation.
+\quickfigure{0.35}{newplan}{Create New Flight Plan Use Case}
+
+\clearpage
+\subsubsection{UC:Save Plan}
+When a user wants to save the current flight plan, they will select the `save' button and be given the option to save under a new name, or continuing with the existing save name should one exist.
+Once a valid name is entered, the program will generate the current flight plan and format it to the same XML standard which will be saved onto the SD card, except at a given target on the computer desktop.
+\quickfigure{0.35}{saveplan}{Save Flight Plan Use Case}
+
+\clearpage
+\subsubsection{UC:Edit Plan}
+In order to edit a previously saved flight plan, the program must first make sure that the user does not currently have a flight plan open that has not been saved.
+If there is a plan that needs to be saved, the program saves the program to an XML document and then clears the map API and list interface, and loads the other plan’s waypoints from the XML to the list and updates the map.
+\quickfigure{0.35}{editplan}{Edit Flight Plan Use Case}
+
+\clearpage
+\subsubsection{UC:Add Waypoint}
+To add a waypoint, the user must first enter both a longitude and lattitude coordinate, once completed, click the `add waypoint' button located on the upper left portion of the application window.
+In doing so, the application will first validate whether or not the input is valid, and if so, the application will call upon it's add waypoint function.
+While doing this, the application will also draw a cooresponding point on the visual map, as well as a arrow connecting the newly added waypoint to the last waypoint currently drawn on the map, this step is ignored if it is the first waypoint entered.
+Should the input be invalid, it would alert the user that an incorrect coordinate was entered and the program does not enter the invalid data into the flight editor.
+\quickfigure{0.75}{add}{Add Waypoint Use Case}
+
+\clearpage
+\subsubsection{UC:Remove Waypoint}
+If a user wants to remove a waypoint from the flight plan, they must first click on the `x' to delete the waypoint.
+Doing so initiates a series of checks which the program computes automatically, such as seeing whether or not the waypoint is between other waypoints.
+Depending on the placement of this waypoint in question and if it is preceded or followed by another waypoint, the program will accordingly remove and redraw the connecting arrows connecting the preceding and following waypoints.
+Once complete, the program will remove the waypoint.
+\quickfigure{1}{remove}{Remove Waypoint Use Case}
+
+\clearpage
+\subsubsection{UC:Rearrange Waypoint}
+The user must be able to not only create new waypoints and delete them from a list, but be able to shift existing waypoints around.
+In order to re-arrange the order of flight waypoints in the flight plan list, the user must select a specific waypoint and then decide whether they want to move it up in order or down in order.
+Depending on which way the user decides to shift the waypoint, the list will update and display the new order.
+Afterwhich the program will shift the arrows between waypoints over the google maps API.
+\quickfigure{0.5}{rearrange}{Rearrange Waypoints Use Case}
+
+\clearpage
+\subsubsection{UC:Map Toggle}
+The user may wish to shift which kind of map the flight plan display is using.
+If the user wishes to changed from the default road map background to a terrain, satellite, or hybrid map, the user will simply select one of the four map “buttons” at which point the google map API will simply change the background that the points are overlaid on.
+The only checks at this point is the redundancy check of making sure that the user is not selecting the already-selected map.
+\quickfigure{0.75}{maptoggle}{Map Toggle Use Case}
+
+\clearpage
 \section{Design Considerations} \label{dsign}
   \subsection{Assumptions and Dependencies}
     See CIOS Digital Software Requirements Specification Section 2.7 for details.
@@ -203,7 +226,10 @@ The architecture of the application follows general best-practices for an object
   \item A SQLite database will provide caching for settings and map images.
     SQLite is a natural fit as each application installation uses its own copy of an offline database, as opposed to a central database accessed online.
 \end{itemize}
+
+\newpage
 \subsection{Architectural Design}
+\quickfigure{0.5}{application-packages}{Dependency Graph of Projects within Solution}
 The program is split into a series of five projects:
 \begin{description}
   \item[Application] The user-facing application.
@@ -218,11 +244,9 @@ The program is split into a series of five projects:
 \end{description}
 The project dependencies can be seen below.
 Note that they form a directed acyclic graph with a single common descendent: the application.
-\quickfigure{0.5}{application-packages}{Dependency Graph of Projects within Solution}
 
 \subsection{Decomposition Description}
 \subsubsection{Coordinate}
-\quickfigure{0.65}{coordinate}{UML Diagram of Coordinate Project}
 Because flight planning software fundamentally marshals coordinates,
 a base project containing the data structure is a common dependency throughout all other projects.
 A coordinate is represented as a simple pair of latitude and longitude numbers.
@@ -230,16 +254,18 @@ The Coordinate type is an immutable structure containing little functional logic
 It implements equality, but is not ordered.
 
 \subsubsection{Flight Plan}
-\quickfigure{0.65}{flightplan}{UML Diagram of Flight Plan Project and Dependencies}
 The flight plan project contains a single class, FlightPlan, responsible for providing an opaque wrapper around a collection of coordinates.
 Functionality of the flight plan should allow editing of the route, as well as providing bindings necessary for XAML interoperation.
 Logic for loading and saving the XML .fpl files is also contained in this class, using .NET's standard XML library.
+\quickfigure{0.65}{flightplan}{UML Diagram of Flight Plan Project and Coordinate Project}
 
+\newpage
 \subsubsection{Mab Database}
-\quickfigure{0.85}{mapdb}{UML Diagram of Map Database Project and Dependencies}
 The map database provides a series of types externally visible only to the map controls.
 The primary interface of this project is the MapProvider, an interface with a single method which accepts a MapImageSpec and returns a bitmap image.
 Internally there is only one implementation of a MapProvider: the SQLiteDBMap.
+
+\quickfigure{0.8}{mapdb}{UML Diagram of Map Database Project and Dependencies}
 
 A MapImageSpec is an immutable piece of data which correlates to the necessary arguments in a Google Static Maps query.
 These elements are the map type, represented by a component MapType enumeration, a coordinate center, a decimal zoom level, and a width and height measured in pixels.
@@ -250,6 +276,7 @@ A MapType is an enumeration with four possible values, directly corresponding to
 The SQLiteDBMap class is an implementation of a MapProvider.
 The class contains few fields, storing most of its data in an external SQLite database file.
 When a call to GetImage is made on a SQLiteDBMap, it defers the work to three internal functions using the following psuedocode.
+
 \begin{lstlisting}
 fn GetImage(spec):
     cachedImage = GetCachedImage(spec)
@@ -260,16 +287,18 @@ fn GetImage(spec):
         CacheImage(spec, image)
         return image
 \end{lstlisting}
+
 The above psuedocode ignores possible errors, such as network failures, that will be handled in the application.
 The function DownloadImage makes a query on the Google Static Maps API,
 while the functions CacheImage and GetCachedImage store and retrieve, respectively, images which have already been downloaded.
 
 \subsubsection{Map Controls}
-\quickfigure{0.85}{mapcontrol}{UML Diagram of Map Control Project and Dependencies}
 The primary map control used to view a flight plan is the WorldMap class.
 An instance of a WorldMap contains references to a FlightPlan and a MapProvider,
 and has fields containing the coordinate of the display's center, as well as the current map type and zoom level.
 The WorldMap class is strictly a view, and has no direct functionality for modifying data.
+
+\quickfigure{0.88}{mapcontrol}{UML Diagram of Map Control Project and Dependencies}
 
 The WorldMap is implemented as a UserControl containing three subcontrols:
 a canvas for drawing the map and the waypoints of the flight plan,
@@ -278,7 +307,6 @@ and a control for selecting the zoom level.
 The FlightPlan is set as a DependencyProperty so that WPF is able to bind it to multiple locations, as it will be shared with the main application.
 
 \subsubsection{Application}
-\quickfigure{1.0}{application}{UML Diagram of Application Project and Dependencies}
 MainPage is the entry point of the application, a Window which provides a tiled view (see \ref{sec:ui}) of three main components:
 a FlightPlanChooser, a FlightPlanTable, and a WorldMap.
 MainPage is also responsible for containing the peripheral user interface, such as a menu bar.
@@ -306,7 +334,9 @@ Some classes and projects could easily be rearranged,
 such as the FlightPlanChooser class which would also work in the MapControls project.
 The FlightPlanChooser remains in the Application project instead because it contains sufficient application logic to not be a pure view component.
 
-\newpage
+\quickfigure{1.0}{application}{UML Diagram of Application Project and Dependencies}
+
+\clearpage
 \section{Human Interface Design} \label{sec:ui}
 \subsection{Overview of User Interface}
 The interface for the Flight Planning Editor will be a Windows desktop application with a design concept shown in the illustration below.
