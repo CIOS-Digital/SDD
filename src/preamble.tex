@@ -19,5 +19,17 @@
 
 \usepackage{float}
 
+% Source code
+\usepackage{listings}
+
+
+\newcommand{\quickfigure}[3]{
+  \begin{figure}[!ht]
+    \centering
+    \includegraphics[width=#1\linewidth]{#2}
+    \caption{#3}
+  \end{figure}
+}
+
 % Restrict table of contents to parts through subsubsections
 \setcounter{tocdepth}{3}

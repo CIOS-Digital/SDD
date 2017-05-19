@@ -1,0 +1,20 @@
+@startuml
+package Application { }
+package Coordinate { }
+package FlightPlan { }
+package MapControl { }
+package MapDB { }
+
+Application <-- Coordinate
+Application <-- FlightPlan
+Application <-- MapControl
+
+FlightPlan <-- Coordinate
+
+MapControl <-- Coordinate
+MapControl <-- FlightPlan
+MapControl <-- MapDB
+
+MapDB <-- Coordinate
+
+@enduml
