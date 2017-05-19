@@ -81,8 +81,6 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
 \tableofcontents
 
 \newpage
-
-
 \section{Introduction}
   \subsection{Purpose}
     This software design document describes the architecture and system design of the CIOS Digital Flight Planning Editor release 1.0.
@@ -123,6 +121,7 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
 
     %  \subsection{System context Diagram}
 
+\newpage
 \section{Design Considerations} \label{dsign}
   \subsection{Assumptions and Dependencies}
     See CIOS Digital Software Requirements Specification Section 2.7 for details.
@@ -144,39 +143,152 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
     One of these meetings coincides with meeting with our faculty advisor.
     Project code will be stored in a git repository with code reviews before integration into the master branch.
 
-% \section{Architectural Strategies}
-% \section{System Architecture}
-%   \subsection{Architectural Design}
-%   \subsection{Decomposition Description}
-%   \subsection{Design Rationale}
 \newpage
+\section{System Architecture}
+\subsection{Architectural Strategies}
+The architecture of the application follows general best-practices for an object-oriented Windows application,
+  using the \emph{W}indows \emph{P}resentation \emph{F}oundation (WPF) framework from C\#.
+\begin{itemize}
+  \item The application splits source code into a series of projects within a Visual Studio solution.
+    These projects are organized into an acyclic graph of dependencies to prevent bidirectional coupling wherever possible.
+  \item The design follows the \emph{m}odel \emph{v}iew \emph{v}iew-\emph{m}odel (MVVM) pattern when applicable.
+    This pattern encourages a strong separation between data, contained in the model, and the user inteface--or view.
+    The view-model is often called the binding, and handles two-way communication between views and models;
+    this is where most of the application's logic is handled.
+    The MVVM pattern is considered the default for native Windows application using the e\emph{x}tensible \emph{a}pplication \emph{m}arkup \emph{l}anguage (XAML)\cite{msdn_mvvm}.
+  \item Types should be as small as possible, and prefer composition to inheritence.
+  \item When a type is representable with a small, finite number of distinct values, an enum shall be used instead of ambiguous types such as strings.
+  \item Data should be immutable whenever possible.
+  \item Map data will be provided through the Google Maps API.
+    Google Maps was chosen as opposed to OpenStreetMap due to providing official support for downloading map tiles\cite{gmaps_tiles};
+    OpenStreetMap tiles are provided by unofficial applications instead, and support varies between multiple options\cite{osm_tiles}.
+  \item An internet connection shall be required during use of the application in order to stream map tile images as they become necessary.
+    An alternative that was considered involved shipping an offline copy of the map with the application installer,
+    but was decided against primarily because of large install sizes.
+    Images will be cached locally to allow for reuse.
+  \item A SQLite database will provide caching for settings and map images.
+    SQLite is a natural fit as each application installation uses its own copy of an offline database, as opposed to a central database accessed online.
+\end{itemize}
+\subsection{Architectural Design}
+The program is split into a series of five projects:
+\begin{description}
+  \item[Application] The user-facing application.
+    This assembles the individual components and organizes much of the business logic.
+  \item[Coordinate] Contains only a structure used to pair latitudes and longitudes.
+  \item[FlightPlan] A library containing the flight planning logic.
+    Primarily this serves as a wrapper around a collection of coordinates, providing a more strict set of invarients.
+  \item[MapControl] A UI component library, keeping custom controls separate from the main application.
+    Dependencies that are only used for implementation of the controls, but which do not effect their interface, are thus kept invisible to the final application.
+  \item[MapDB] A library for interfacing with the Google Static Maps API.
+    This library also provides SQLite caching for the requests.
+\end{description}
+The project dependencies can be seen below.
+Note that they form a directed acyclic graph with a single common descendent: the application.
+\quickfigure{0.5}{application-packages}{Dependency Graph of Projects within Solution}
 
+\subsection{Decomposition Description}
+\subsubsection{Coordinate}
+\quickfigure{0.65}{coordinate}{UML Diagram of Coordinate Project}
+Because flight planning software fundamentally marshals coordinates,
+a base project containing the data structure is a common dependency throughout all other projects.
+A coordinate is represented as a simple pair of latitude and longitude numbers.
+The Coordinate type is an immutable structure containing little functional logic.
+It implements equality, but is not ordered.
+
+\subsubsection{Flight Plan}
+\quickfigure{0.65}{flightplan}{UML Diagram of Flight Plan Project and Dependencies}
+The flight plan project contains a single class, FlightPlan, responsible for providing an opaque wrapper around a collection of coordinates.
+Functionality of the flight plan should allow editing of the route, as well as providing bindings necessary for XAML interoperation.
+Logic for loading and saving the XML .fpl files is also contained in this class, using .NET's standard XML library.
+
+\subsubsection{Mab Database}
+\quickfigure{0.85}{mapdb}{UML Diagram of Map Database Project and Dependencies}
+The map database provides a series of types externally visible only to the map controls.
+The primary interface of this project is the MapProvider, an interface with a single method which accepts a MapImageSpec and returns a bitmap image.
+Internally there is only one implementation of a MapProvider: the SQLiteDBMap.
+
+A MapImageSpec is an immutable piece of data which correlates to the necessary arguments in a Google Static Maps query.
+These elements are the map type, represented by a component MapType enumeration, a coordinate center, a decimal zoom level, and a width and height measured in pixels.
+Although the width and height of the images are constant in the application's use, this is not assumed by the type.
+
+A MapType is an enumeration with four possible values, directly corresponding to the four map types provided by Google.
+
+The SQLiteDBMap class is an implementation of a MapProvider.
+The class contains few fields, storing most of its data in an external SQLite database file.
+When a call to GetImage is made on a SQLiteDBMap, it defers the work to three internal functions using the following psuedocode.
+\begin{lstlisting}
+fn GetImage(spec):
+    cachedImage = GetCachedImage(spec)
+    if cachedImage is not null:
+        return cachedImage
+    else:
+        image = DownloadImage(spec)
+        CacheImage(spec, image)
+        return image
+\end{lstlisting}
+The above psuedocode ignores possible errors, such as network failures, that will be handled in the application.
+The function DownloadImage makes a query on the Google Static Maps API,
+while the functions CacheImage and GetCachedImage store and retrieve, respectively, images which have already been downloaded.
+
+\subsubsection{Map Controls}
+\quickfigure{0.85}{mapcontrol}{UML Diagram of Map Control Project and Dependencies}
+The primary map control used to view a flight plan is the WorldMap class.
+An instance of a WorldMap contains references to a FlightPlan and a MapProvider,
+and has fields containing the coordinate of the display's center, as well as the current map type and zoom level.
+The WorldMap class is strictly a view, and has no direct functionality for modifying data.
+
+The WorldMap is implemented as a UserControl containing three subcontrols:
+a canvas for drawing the map and the waypoints of the flight plan,
+a control for selecting which map type is desired,
+and a control for selecting the zoom level.
+The FlightPlan is set as a DependencyProperty so that WPF is able to bind it to multiple locations, as it will be shared with the main application.
+
+\subsubsection{Application}
+\quickfigure{1.0}{application}{UML Diagram of Application Project and Dependencies}
+MainPage is the entry point of the application, a Window which provides a tiled view (see \ref{sec:ui}) of three main components:
+a FlightPlanChooser, a FlightPlanTable, and a WorldMap.
+MainPage is also responsible for containing the peripheral user interface, such as a menu bar.
+When a MainPage is constructed, it also constructs each component inside it recursively, during the process setting bindings as appropriate.
+The most important binding to be aware of is the active FlightPlan, which must be synchronized correctly between the FlightPlanTable and the WorldMap.
+The active FlightPlan is initially empty but not null,
+and can be either modified in place through interaction with the FlightPlanTable or destroyed and replaced through the menu bar or the FlightPlanChooser.
+
+The FlightPlanTable is a UserControl containing subcontrols for
+  a textual, grid-based display of a flight plan as well
+  as controls necessary to modify the active flight plan.
+Modifications to the flight plan include adding or removing waypoints, reordering waypoints, or moving an existing waypoint.
+Due to the DependencyProperty libraries, changes will automatically propogate across other components.
+
+The FlightPlanChooser is a UserControl containing a view of all flight plans contained in the same folder as the open FlightPlan.
+This control can be used to handle traditional file operations like opening, saving, and creating new files.
+The menu bar and the FlightPlanChooser differ in functionality by intentional limitations on the FlightPlanChooser.
+The FlightPlanChooser will only perform operations that follow the folder structure of a Garmin G1000-compatible SD card,
+  while the menu bar will allow the user to save or load files from any path.
+
+\subsection{Design Rationale}
+The project structure chosen was maximally strict in an attempt to disallow incorrect usage and implementation.
+A one-project design was briefly considered, but deemed less preferable to strong modulization due to increased ease of leaking implementation details.
+Some classes and projects could easily be rearranged,
+such as the FlightPlanChooser class which would also work in the MapControls project.
+The FlightPlanChooser remains in the Application project instead because it contains sufficient application logic to not be a pure view component.
+
+\newpage
 \section{Human Interface Design} \label{sec:ui}
-
 \subsection{Overview of User Interface}
 The interface for the Flight Planning Editor will be a Windows desktop application with a design concept shown in the illustration below.
-	\subsection{Screen Image}
-    \begin{figure}[h!]
-      \includegraphics[width=0.95\linewidth]{figs/FlightPlanning_Interface}\caption{Mockup of User Interface}
-    \end{figure}
-	\subsection{Screen Objects and Actions}
+\quickfigure{0.95}{figs/FlightPlanning_Interface}{Mockup of User Interface}
+
+\subsection{Screen Objects and Actions}
 In the above window there are effectively four subsections to the interface. In the upper left corner, where it reads 'Lat', this portion of the interface is where the user can input both the lattitude and longitude coordinates as input into the flight editor. To add these coordinates to the current flight plan, simply click on the 'Add Waypoint' box and the program will create a new point on the map as well as create an addition into the Order of Points Visited section detailed below. \\
 Directly below, there will be another section which reads the various flight plans that are currently loaded and their respective names (i.e. Flight Plan A). To distinguish which flight plan the user wants to current edit, that flight plan will have a box which shows an 'X' or is checked to denote that it is currently selected. \\
 Underneath the above section, in the lower left corner of the application, there is a section for the order of points visited. In this section there will be a list of all the currently added waypoints named 'W1', 'W2'... Each of these waypoints are listed in order from top to the bottom. To the right of these names there are arrows pointing upwards and downwards, and by clicking on this icon up or down, the user will be able to re-arrange the order in which each point is visited and the application will swap the waypoint boxes in this section, as well as redraw the arrow on the map to reflect the changes made. In the upper left portion of each boxes for the waypoints will be a small box with an 'X' when clicked will delete the waypoint and remove it from the map.\\
 The largest portion of the interface will display the map. This section will display the current area that the user has selected by panning and zooming in or out of the map. Inside there will be each of the waypoints listed and arrows denoting the direction of the flight plan. As the user enters a new lattitude and longitude, these waypoints will be refreshed and shown ontop of the map in their respective locations. \\
 Also included, however not displayed in the diagram are the file and help pull down menus. Within the file menu, there will be the option to start a new or open an existing flight plan. The ability to save the flight plan, or to export onto the SD card. As well as being able to exit the application. Under the help menu, there will be a tutorial to showcase the basic functionality and an included about page with the company information and the version number of the application.
 
+\newpage
 \appendix
-\section{Remove Me!}
-\begin{figure}[!ht]
-    \centering
-    \includegraphics{example-diagram}
-\end{figure}
-This is an example of adding a diagram with plantuml.
-Make sure you have an appropriately named UML file in the plantuml folder,
-and just use includegraphics.
 
+\bibliography{citations}{}
+\bibliographystyle{plain}
 
-% \bibliography{citations}{}
-% \bibliographystyle{plain}
 \end{document}
