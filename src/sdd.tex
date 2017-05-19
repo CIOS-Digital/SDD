@@ -6,53 +6,69 @@
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \fancyhf{}
-\rhead{Page \thepage}
-\lhead{Software Design Specification for Flight Plan Editor}
 \newcolumntype{R}{>{\raggedleft\arraybackslash}X}%
+\fancypagestyle{style1}{
+\fancyhf{}
+\lhead{Software Design Document}
+\rhead{CIOS Digital}
+\lfoot{05/16/2017}
+\rfoot{\thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}%
+}
+\fancypagestyle{style2}{
+\fancyhf{}
+\rhead{}
+\lhead{}
+\cfoot{\thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}%
+}
+\pagestyle{style1}
 
 \makeatletter
 \renewcommand{\maketitle}{\bgroup\setlength{\parindent}{0pt}
 \thispagestyle{empty}
 \null
+
   \begin{flushleft}
   \vspace{15mm}
   \vskip2mm
   \Huge{\textbf{\@title}}
-  \vspace{8cm}
-
-CSCI 492: Spring 2017\\
-  \textbf{Group: CIOS Digital}\\
-
-  \@author
+  \vspace{7cm}
+\begin{figure}[ht]
+  \begin{minipage}[b]{0.45\linewidth}
+    \includegraphics[width=.75\textwidth]{images/cios.png}
+  \end{minipage}
+  \hspace{0.5cm}
+  \begin{minipage}[b][][c]{0.45\linewidth}
+    \LARGE{\@author}
+  \vspace{0.35cm}
+  \end{minipage}
+\end{figure}
+\\CSCI 492: Spring 2017\\
   \end{flushleft}\egroup
 }
 \makeatother
 
-\title{Software Design Specification\\for\\Flight Plan Editor}
+\title{Software Requirements Specification\\for\\Flight Plan Editor}
 \date{}
 \author{
 Cedrick Cooke\\
 Ian Littke\\
 Owen Roth-Lerner\\
-Sander Scherman Garzon
+Sander Scherman Garzon\\
 }
 
 
 
-% \title{Software Design Document \\
-% Flight Planning
-% }
-% \author{Cedrick Cooke
-%     \and Ian Littke
-%     \and Owen Roth-Lerner
-%     \and Sander Scherman Garzon
-% }
-% \date{Version 0.1 \\ 2017-04-13}
-
 \begin{document}
+\pagenumbering{roman}
 \maketitle
 
 \newpage
+\pagestyle{style2}
+\setcounter{page}{1}
 \section*{Revision History}
 \begin{tabularx}{\textwidth}{|l|r|X|l|}
 \hline
@@ -77,10 +93,15 @@ Various & 2017-04-13 & Initial document body and writing & Draft 1 \\ \hline
         &            &                                   &         \\ \hline
         &            &                                   &         \\ \hline
 \end{tabularx}
-\newpage
-\tableofcontents
 
 \newpage
+\tableofcontents
+\newpage
+
+\pagestyle{style1}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
 \section{Introduction}
   \subsection{Purpose}
     This software design document describes the architecture and system design of the CIOS Digital Flight Planning Editor release 1.0.
