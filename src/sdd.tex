@@ -10,6 +10,7 @@
     urlcolor=black
 }
 \usepackage{fancyhdr}
+\usepackage{pdfpages}
 \pagestyle{fancy}
 \fancyhf{}
 \newcolumntype{R}{>{\raggedleft\arraybackslash}X}%
@@ -122,21 +123,13 @@ Various & 2017-05-16 & Rewrite of document               & Draft 2  \\
     This document provides the architecture and design of Release 1.0 of the software.
 
    \subsection{Overview}
-     Section \ref{system} of this document details the system overview and offers use-case scenarios. \\
-     Section \ref{dsign} covers considerations taken into account when designing the system.\\
+     Section \ref{system} of this document details important use-case scenarios. \\
+     Section \ref{dsign} covers considerations and constraints taken into account when designing the system.\\
      Section \ref{arch} covers the system architecture including the architectural design, decomposition description, and design rationale. \\
   %   Section 4 details the data design giving a description and data dictionary. \\
   %   Section 5 is the component design, offering a comprehensive look at each component and how they link with one another. \\
      Section \ref{sec:ui} includes a mockup of the user interface design along with explanation. \\
      Section \ref{sec:matrix} shows the requirements matrix as defined in the Software Requirements Specification.\\
-  \subsection{Reference Material}
-    \begin{itemize}
-      \setlength{\itemsep}{1pt}
-      \setlength{\parskip}{0pt}
-      \setlength{\parsep}{0pt}
-      \item CIOS Digital Vision and Scope Document
-      \item CIOS Digital Software Requirements Specification (SRS)
-    \end{itemize}
 
 \subsection{Definitions, Acronyms, and Abbreviations}
 \begin{tabularx}{\textwidth}{|l|R|} \hline
@@ -147,22 +140,21 @@ Various & 2017-05-16 & Rewrite of document               & Draft 2  \\
 \end{tabularx}
 
 \newpage
-\section{System Overview}\label{system}
+\section{Use Case Scenarios}\label{system}
 The CAP will need to create flight plans based on existing structures so the application will focus around a map.
 The user will then be able to either click on map to insert a new waypoint in the flight plan or manually input in a latitude/longitude coordinate system.
 Both are included to allow precise input of key waypoints (such as an overpass) or coarse input for secondary waypoints (such as an entry/departure course).
 The User Interface is further explained in Section \ref{sec:ui}.
 
-\subsection{Use Cases}
 \quickfigure{1}{highlevel}{Available actions to a user}
 
-\subsubsection{UC:Show Help}
+\subsection{UC:Show Help}
 If a user is experiencing any difficulty with regards to using the application, there will be an included help page to assist with basic knowledge and instructions on how to use the program.
 The user must click the `help' tab located at the top of the program which will open a new window offering descriptions and a quick tutorial on how to use the application.
 \quickfigure{0.35}{showhelp}{Show Help Use Case}
 
 \clearpage
-\subsubsection{UC:Create New Plan}\label{newplan}
+\subsection{UC:Create New Plan}\label{newplan}
 In order to create a new flight plan, the user must click on `New Flight Plan.'
 Doing so will first initiate a check whether or not a current plan is in use, and if so, check to see whether or not this current plan is saved before moving on.
 Following this initial step, the program will proceed by clearing all waypoints currently drawn on the map.
@@ -171,19 +163,19 @@ If the name is invalid, either wait for the user to enter in a valid name, or al
 \quickfigure{0.35}{newplan}{Create New Flight Plan Use Case}
 
 \clearpage
-\subsubsection{UC:Save Plan} \label{saveplan}
+\subsection{UC:Save Plan} \label{saveplan}
 When a user wants to save the current flight plan, they will select the `save' button and be given the option to save under a new name, or continuing with the existing save name should one exist.
 Once a valid name is entered, the program will generate the current flight plan and format it to the same XML standard which will be saved onto the SD card, except at a given target on the computer desktop.
 \quickfigure{0.35}{saveplan}{Save Flight Plan Use Case}
 
 \clearpage
-\subsubsection{UC:Edit Plan} \label{editplan}
+\subsection{UC:Edit Plan} \label{editplan}
 In order to edit a previously saved flight plan, the program must first make sure that the user does not currently have a flight plan open that has not been saved.
 If there is a plan that needs to be saved, the program saves the program to an XML document and then clears the map API and list interface, and loads the other plan’s waypoints from the XML to the list and updates the map.
 \quickfigure{0.35}{editplan}{Edit Flight Plan Use Case}
 
 \clearpage
-\subsubsection{UC:Add Waypoint}\label{sec:addwp}
+\subsection{UC:Add Waypoint}\label{sec:addwp}
 To add a waypoint, the user must first enter both a longitude and latitude coordinate, once completed, click the `add waypoint' button located on the upper left portion of the application window.
 In doing so, the application will first validate whether or not the input is valid, and if so, the application will call upon it's add waypoint function.
 While doing this, the application will also draw a corresponding point on the visual map, as well as a arrow connecting the newly added waypoint to the last waypoint currently drawn on the map, this step is ignored if it is the first waypoint entered.
@@ -191,7 +183,7 @@ Should the input be invalid, it would alert the user that an incorrect coordinat
 \quickfigure{0.75}{add}{Add Waypoint Use Case}
 
 \clearpage
-\subsubsection{UC:Remove Waypoint}\label{sec:rmwp}
+\subsection{UC:Remove Waypoint}\label{sec:rmwp}
 If a user wants to remove a waypoint from the flight plan, they must first click on the `x' to delete the waypoint.
 Doing so initiates a series of checks which the program computes automatically, such as seeing whether or not the waypoint is between other waypoints.
 Depending on the placement of this waypoint in question and if it is preceded or followed by another waypoint, the program will accordingly remove and redraw the connecting arrows connecting the preceding and following waypoints.
@@ -199,7 +191,7 @@ Once complete, the program will remove the waypoint.
 \quickfigure{1}{remove}{Remove Waypoint Use Case}
 
 \clearpage
-\subsubsection{UC:Rearrange Waypoint}\label{sec:rearrangewp}
+\subsection{UC:Rearrange Waypoint}\label{sec:rearrangewp}
 The user must be able to not only create new waypoints and delete them from a list, but be able to shift existing waypoints around.
 In order to re-arrange the order of flight waypoints in the flight plan list, the user must select a specific waypoint and then decide whether they want to move it up in order or down in order.
 Depending on which way the user decides to shift the waypoint, the list will update and display the new order.
@@ -207,7 +199,7 @@ After which the program will shift the arrows between waypoints over the Google 
 \quickfigure{0.5}{rearrange}{Rearrange Waypoints Use Case}
 
 \clearpage
-\subsubsection{UC:Map Toggle}
+\subsection{UC:Map Toggle}
 The user may wish to shift which kind of map the flight plan display is using.
 If the user wishes to changed from the default road map background to a terrain, satellite, or hybrid map, the user will simply select one of the four map “buttons” at which point the Google map API will simply change the background that the points are overlaid on.
 The only checks at this point is the redundancy check of making sure that the user is not selecting the already-selected map.
@@ -400,8 +392,12 @@ r5* & Open and saving plans & \ref{saveplan}, \ref{saveplan}, \ref{editplan} & \
 \end{tabularx}
 \newpage
 \appendix
-
+\addcontentsline{toc}{section}{Appendix}
 \bibliography{citations}{}
+\nocite{*}
 \bibliographystyle{plain}
-
+\addcontentsline{toc}{subsection}{References}
+\newpage
+\addcontentsline{toc}{subsection}{Software Requirements Specification}
+\includepdf[pages=-]{srs.pdf}
 \end{document}
